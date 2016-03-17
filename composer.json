@@ -1,0 +1,17 @@
+{
+    "name": "pmvc-plugin/debug_store",
+    "description": "A store for debug plugin could integration with view plugin",
+    "type": "library",
+    "keywords": ["debug", "pmvc", "plug-in"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Hill",
+            "email": "hill@kimo.com"
+        }
+    ],
+    "require": {
+        "pmvc/pmvc": "*"
+    },
+    "minimum-stability": "dev"
+}
