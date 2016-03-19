@@ -1,13 +1,13 @@
 <?php
-namespace PMVC\PlugIn\debug_store;
+namespace PMVC\PlugIn\debug;
 use PMVC\Event;
 use PMVC as p;
-
-// \PMVC\l(__DIR__.'/xxx.php');
-
 ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__.'\debug_store';
+p\initPlugin(['debug'=>null]);
 
-class debug_store extends \PMVC\PlugIn
+class debug_store
+    extends p\PlugIn
+    implements DebugDumpInterface
 {
     private $store = [];
 
