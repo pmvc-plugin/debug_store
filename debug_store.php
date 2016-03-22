@@ -13,7 +13,7 @@ class debug_store
 
     public function init()
     {
-        p\call_plugin(
+        p\callPlugin(
             'dispatcher',
             'attach',
             [
@@ -21,7 +21,7 @@ class debug_store
                 Event\B4_PROCESS_FORWARD,
             ]
         );
-        p\call_plugin(
+        p\callPlugin(
             'dispatcher',
             'attach',
             [
@@ -38,7 +38,7 @@ class debug_store
             $error = $c->getMapping()->findForward('debug');
             $error->set('debugs', $this->store);
             $this->store = null;
-            p\call_plugin(
+            p\callPlugin(
                 'dispatcher',
                 'stop',
                 [false]
@@ -50,7 +50,7 @@ class debug_store
     public function onB4ProcessForward()
     {
         if (!empty($this->store)) {
-            p\call_plugin(
+            p\callPlugin(
                 'dispatcher',
                 'stop',
                 [true]
