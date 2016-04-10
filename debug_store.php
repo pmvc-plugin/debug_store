@@ -36,6 +36,9 @@ class debug_store
         if (!empty($this->store)) {
             $c = \PMVC\getC();
             $error = $c->getMapping()->findForward('debug');
+            if (!$error) {
+                return false;
+            }
             $error->set('debugs', $this->store);
             $this->store = null;
             p\callPlugin(
