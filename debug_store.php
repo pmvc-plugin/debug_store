@@ -3,7 +3,10 @@ namespace PMVC\PlugIn\debug;
 use PMVC\Event;
 use PMVC as p;
 ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__.'\debug_store';
-p\initPlugin(['debug'=>null]);
+p\initPlugin([
+    'debug'=>null,
+    'controller'=>null
+]);
 
 class debug_store
     extends p\PlugIn

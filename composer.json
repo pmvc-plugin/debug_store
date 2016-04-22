@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "pmvc/pmvc": "*",
+        "pmvc-plugin/controller": "*",
         "pmvc-plugin/debug": "*"
     },
     "minimum-stability": "dev"
