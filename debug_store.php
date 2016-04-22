@@ -34,7 +34,7 @@ class debug_store
     public function onFinish()
     {
         if (!empty($this->store)) {
-            $c = \PMVC\getC();
+            $c = \PMVC\plug('controller');
             $error = $c->getMapping()->findForward('debug');
             if (!$error) {
                 return false;
