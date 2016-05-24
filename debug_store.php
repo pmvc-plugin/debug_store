@@ -1,7 +1,13 @@
 <?php
+/**
+ * Debug Store use with view engine.
+ */
+
 namespace PMVC\PlugIn\debug;
+
 use PMVC\Event;
 use PMVC as p;
+
 ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__.'\debug_store';
 p\initPlugin([
     'debug'=>null,
@@ -42,7 +48,7 @@ class debug_store
             if (!$error) {
                 return false;
             }
-            $error->set('debugs', $this->store);
+            \PMVC\plug('view')->append('debugs', $this->store);
             $this->store = null;
             p\callPlugin(
                 'dispatcher',
@@ -65,7 +71,7 @@ class debug_store
                 [true]
             );
         } else {
-            \PMVC\plug('view')->set('debugs', $this->store);
+            \PMVC\plug('view')->append('debugs', $this->store);
             $this->store = null;
         }
     }
