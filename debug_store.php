@@ -21,7 +21,7 @@ class debug_store
             'attach',
             [
                 $this,
-                Event\B4_PROCESS_FORWARD,
+                Event\SET_CONFIG.'_'._FORWARD,
             ]
         );
         p\callPlugin(
@@ -53,14 +53,20 @@ class debug_store
         }
     }
 
-    public function onB4ProcessForward()
+    public function onSetConfig__forward_()
     {
-        if (!empty($this->store)) {
+        $c = \PMVC\plug('controller');
+        if (!empty($c->getErrorForward())
+            || 'redirect' === $c[_FORWARD]->getType()
+            ) {
             p\callPlugin(
                 'dispatcher',
                 'stop',
                 [true]
             );
+        } else {
+            \PMVC\plug('view')->set('debugs', $this->store);
+            $this->store = null;
         }
     }
 

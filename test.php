@@ -1,6 +1,6 @@
 <?php
 PMVC\Load::plug();
-PMVC\addPlugInFolder('../');
+PMVC\addPlugInFolders(['../']);
 class Debug_storeTest extends PHPUnit_Framework_TestCase
 {
     private $_plug = 'debug_store';
