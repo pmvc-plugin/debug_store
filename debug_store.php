@@ -14,6 +14,9 @@ p\initPlugin([
     'controller'=>null
 ]);
 
+/**
+ * @parameters numeric level Debug dump level 
+ */
 class debug_store
     extends p\PlugIn
     implements DebugDumpInterface
@@ -38,17 +41,37 @@ class debug_store
                 Event\FINISH,
             ]
         );
+        if (!isset($this['level'])) {
+            $this['level'] = 'trace';
+        }
+    }
+
+    public function onSetConfig__forward_()
+    {
+        $c = p\plug('controller');
+        if (!empty($c->getErrorForward())
+            || 'redirect' === $c[_FORWARD]->getType()
+            ) {
+            p\callPlugin(
+                'dispatcher',
+                'stop',
+                [true]
+            );
+        } else {
+            p\plug('view')->append('debugs', $this->store);
+            $this->store = null;
+        }
     }
 
     public function onFinish()
     {
         if (!empty($this->store)) {
-            $c = \PMVC\plug('controller');
+            $c = p\plug('controller');
             $error = $c->getMapping()->findForward('debug');
             if (!$error) {
                 return false;
             }
-            \PMVC\plug('view')->append('debugs', $this->store);
+            p\plug('view')->append('debugs', $this->store);
             $this->store = null;
             p\callPlugin(
                 'dispatcher',
@@ -59,27 +82,15 @@ class debug_store
         }
     }
 
-    public function onSetConfig__forward_()
-    {
-        $c = \PMVC\plug('controller');
-        if (!empty($c->getErrorForward())
-            || 'redirect' === $c[_FORWARD]->getType()
-            ) {
-            p\callPlugin(
-                'dispatcher',
-                'stop',
-                [true]
-            );
-        } else {
-            \PMVC\plug('view')->append('debugs', $this->store);
-            $this->store = null;
-        }
-    }
-
     public function escape($s) { return $s; }
 
-    public function dump($p, $type='info')
+    public function dump($p, $type='debug')
     {
-        $this->store[] = [$p, $type];
+        if (p\plug('debug')->isShow(
+            $type,
+            $this['level']
+        )) {
+            $this->store[] = [$p, $type];
+        }
     }
 }
