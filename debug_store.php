@@ -21,8 +21,6 @@ class debug_store
     extends p\PlugIn
     implements DebugDumpInterface
 {
-    private $store = [];
-
     public function init()
     {
         p\callPlugin(
@@ -57,32 +55,28 @@ class debug_store
                 'stop',
                 [true]
             );
-        } else {
-            $this->_appendToView();
         }
     }
 
-    private function _appendToView()
+    private function _appendToView(array $a)
     {
-        p\plug('view')->append('debugs', $this->store);
-        $this->store = null;
+        p\plug('view')->append('debugs', $a);
     }
 
     public function onFinish()
     {
         if (!empty($this->store)) {
             $c = p\plug('controller');
-            $error = $c->getMapping()->findForward('debug');
-            if (!$error) {
+            $debug = $c->getMapping()->findForward('debug');
+            if (!$debug) {
                 return false;
             }
-            $this->_appendToView();
             p\callPlugin(
                 'dispatcher',
                 'stop',
                 [false]
             );
-            $c->processForward($error);
+            $c->processForward($debug);
         }
     }
 
@@ -94,7 +88,7 @@ class debug_store
             $type,
             $this['level']
         )) {
-            $this->store[] = [$p, $type];
+            $this->_appendToView([$p, $type]);
         }
     }
 }
