@@ -58,9 +58,14 @@ class debug_store
                 [true]
             );
         } else {
-            p\plug('view')->append('debugs', $this->store);
-            $this->store = null;
+            $this->_appendToView();
         }
+    }
+
+    private function _appendToView()
+    {
+        p\plug('view')->append('debugs', $this->store);
+        $this->store = null;
     }
 
     public function onFinish()
@@ -71,8 +76,7 @@ class debug_store
             if (!$error) {
                 return false;
             }
-            p\plug('view')->append('debugs', $this->store);
-            $this->store = null;
+            $this->_appendToView();
             p\callPlugin(
                 'dispatcher',
                 'stop',
