@@ -65,7 +65,7 @@ class debug_store
 
     public function onFinish()
     {
-        if (!empty($this->store)) {
+        if (!empty(p\plug('view')->get('debugs'))) {
             $c = p\plug('controller');
             $debug = $c->getMapping()->findForward('debug');
             if (!$debug) {
