@@ -60,7 +60,7 @@ class debug_store
 
     private function _appendToView(array $a)
     {
-        p\plug('view')->append('debugs', $a);
+        p\plug('view')->append('debugs', [$a]);
     }
 
     public function onFinish()
@@ -88,7 +88,7 @@ class debug_store
             $type,
             $this['level']
         )) {
-            $this->_appendToView([$p, $type]);
+            $this->_appendToView([$type, $p]);
         }
     }
 }
