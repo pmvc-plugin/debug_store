@@ -21,6 +21,8 @@ class debug_store
     extends p\PlugIn
     implements DebugDumpInterface
 {
+    private $_view;
+
     public function init()
     {
         p\callPlugin(
@@ -58,14 +60,32 @@ class debug_store
         }
     }
 
+    private function _getView()
+    {
+        if (!$this->_view) {
+            $this->_view = p\plug('view');
+        }
+        return $this->_view;
+    }
+
     private function _appendToView(array $a)
     {
-        p\plug('view')->append('debugs', [$a]);
+        $view = $this->_getView();
+        if (!empty($view)) {
+            $view->append('debugs', [$a]);
+        } else {
+            print_r($a);
+        }
     }
 
     public function onFinish()
     {
-        if (!empty(p\plug('view')->get('debugs'))) {
+        $view = $this->_getView();
+        if (empty(\PMVC\plug('view'))) {
+            print_r($view->get('debugs'));
+            return;
+        }
+        if (!empty($view->get('debugs'))) {
             $c = p\plug('controller');
             $debug = $c->getMapping()->findForward('debug');
             if (!$debug) {
