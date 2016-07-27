@@ -49,8 +49,9 @@ class debug_store
     public function onSetConfig__forward_()
     {
         $c = p\plug('controller');
-        if (!empty($c->getErrorForward())
-            || 'redirect' === $c[_FORWARD]->getType()
+        $view = $this->_getView();
+        if (!empty($view->get('debugs'))
+            && 'redirect' === $c[_FORWARD]->getType()
             ) {
             p\callPlugin(
                 'dispatcher',
