@@ -64,6 +64,10 @@ class FakeView extends \PMVC\PlugIn
         return true;
     }
     function setThemeFolder(){}
+
+    function appendView(array $arr){
+        $this->append($arr); 
+    }
 }
 
 
