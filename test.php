@@ -13,7 +13,8 @@ class Debug_storeTest extends PHPUnit_Framework_TestCase
         $b = new \PMVC\MappingBuilder(); 
         $b->addForward('debug', [_TYPE=>'view']);
         $c->addMapping($b);
-        \PMVC\plug('view',[_CLASS=>__NAMESPACE__.'\FakeView']);
+        \PMVC\option('set', _TEMPLATE_DIR, './');
+        $view = \PMVC\plug('view',[_CLASS=>__NAMESPACE__.'\FakeView']);
     }
 
     function teardown()
@@ -51,22 +52,14 @@ class Debug_storeTest extends PHPUnit_Framework_TestCase
             ['debug','a'],
             ['debug','b'],
         ];
-        $this->assertEquals($expected,$v['debugs']);
+        $this->assertEquals($expected,$v->get('debugs'));
     }
 }
 
-class FakeView extends \PMVC\PlugIn
+class FakeView extends \PMVC\PlugIn\view\ViewEngine
 {
     function process(){
         \PMVC\option('set','v',1);
-    }
-    function get(){
-        return true;
-    }
-    function setThemeFolder(){}
-
-    function appendView(array $arr){
-        $this->append($arr); 
     }
 }
 
