@@ -7,6 +7,7 @@ namespace PMVC\PlugIn\debug;
 
 use PMVC\Event;
 use PMVC as p;
+use UnderflowException;
 
 ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__.'\debug_store';
 p\initPlugin([
@@ -88,10 +89,11 @@ class debug_store
         }
         if (!empty($view->get('debugs'))) {
             $c = p\plug('controller');
-            $debug = $c->getMapping()->findForward('debug');
-            if (!$debug) {
-                return false;
+            $mapping = $c->getMapping();
+            if (!$mapping->forwardExists('debug')) {
+                throw new UnderflowException('Can\'t find debug forward.');
             }
+            $debug = $mapping->findForward('debug');
             p\callPlugin(
                 'dispatcher',
                 'stop',

@@ -42,6 +42,22 @@ class Debug_storeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1,\PMVC\getOption('v'));
     }
 
+    /**
+    * @expectedException UnderflowException
+    */
+    function testDebugForwardNotExists()
+    {
+        $c = \PMVC\plug('controller');
+        $mapping = $c->getMapping();
+        $b = new \PMVC\MappingBuilder(); 
+        $key = \PMVC\ACTION_FORWARDS;
+        $b[$key]['debug'] = null;
+        $mapping->addByKey($key, $b);
+        $debugStore=\PMVC\plug($this->_plug);
+        \PMVC\d('fake'); 
+        $debugStore->onFinish();
+    }
+
     function testAppendDebugToView()
     {
         $v = \PMVC\plug('view');
