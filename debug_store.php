@@ -74,7 +74,7 @@ class debug_store
     {
         $view = $this->_getView();
         if (!empty($view)) {
-            $view->appendView(['debugs'=>[$a]]);
+            $view->append(['debugs'=>[$a]]);
         } else {
             print_r($a);
         }
