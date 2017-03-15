@@ -103,7 +103,14 @@ class debug_store
         }
     }
 
-    public function escape($s) { return $s; }
+    public function escape($string) { 
+        if (!empty($string) && is_string($string)) {
+            if (!mb_detect_encoding($string,'utf-8',true)) {
+                $string = utf8_encode($string);
+            }
+        }
+        return $string;
+    }
 
     public function dump($p, $type='debug')
     {
