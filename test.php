@@ -48,7 +48,7 @@ class Debug_storeTest extends PHPUnit_Framework_TestCase
     function testDebugForwardNotExists()
     {
         $c = \PMVC\plug('controller');
-        $mapping = $c->getMapping();
+        $mapping = $c->getMappings();
         $b = new \PMVC\MappingBuilder(); 
         $key = \PMVC\ACTION_FORWARDS;
         $b[$key]['debug'] = null;

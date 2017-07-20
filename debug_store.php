@@ -89,7 +89,7 @@ class debug_store
         }
         if (!empty($view->get('debugs'))) {
             $c = p\plug('controller');
-            $mapping = $c->getMapping();
+            $mapping = $c->getMappings();
             if (!$mapping->forwardExists('debug')) {
                 throw new UnderflowException('Can\'t find debug forward.');
             }
