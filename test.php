@@ -42,6 +42,17 @@ class Debug_storeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1,\PMVC\getOption('v'));
     }
 
+    function testGetDebugForward()
+    {
+        $debugStore=\PMVC\plug($this->_plug);
+        \PMVC\d('fake'); 
+        $debugStore->onFinish();
+        $v = \PMVC\plug('view');
+        $debugs = $v->get('debugs');
+        $this->assertEquals($debugs['0']['0'], 'debug');
+        $this->assertEquals($debugs['0']['1'], 'fake');
+    }
+
     /**
     * @expectedException UnderflowException
     */
