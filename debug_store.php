@@ -84,6 +84,7 @@ class debug_store
     {
         $view = $this->_getView();
         if (empty(\PMVC\plug('view'))) {
+            // echo directly, because no view here
             print_r($view->get('debugs'));
             return;
         }
@@ -91,7 +92,9 @@ class debug_store
             $c = p\plug('controller');
             $mapping = $c->getMappings();
             if (!$mapping->forwardExists('debug')) {
-                throw new UnderflowException('Can\'t find debug forward.');
+                // echo directly, because no view here
+                print_r('Can\'t find debug forward.');
+                return;
             }
             $debug = $mapping->findForward('debug');
             p\callPlugin(

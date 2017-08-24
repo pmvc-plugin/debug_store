@@ -53,9 +53,6 @@ class Debug_storeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($debugs['0']['1'], 'fake');
     }
 
-    /**
-    * @expectedException UnderflowException
-    */
     function testDebugForwardNotExists()
     {
         $c = \PMVC\plug('controller');
@@ -66,7 +63,11 @@ class Debug_storeTest extends PHPUnit_Framework_TestCase
         $mapping->addByKey($key, $b);
         $debugStore=\PMVC\plug($this->_plug);
         \PMVC\d('fake'); 
+        ob_start();
         $debugStore->onFinish();
+        $output = ob_get_contents();
+        ob_end_clean();
+        $this->assertContains('Can\'t find debug forward.',$output);
     }
 
     function testAppendDebugToView()
