@@ -76,7 +76,7 @@ class debug_store
         if (!empty($view)) {
             $view->append(['debugs'=>[$a]]);
         } else {
-            print_r($a);
+            $this->__dump($a);
         }
     }
 
@@ -85,7 +85,7 @@ class debug_store
         $view = $this->_getView();
         if (empty(\PMVC\plug('view'))) {
             // echo directly, because no view here
-            print_r($view->get('debugs'));
+            $this->__dump($view->get('debugs'));
             return;
         }
         if (!empty($view->get('debugs'))) {
@@ -93,7 +93,7 @@ class debug_store
             $mapping = $c->getMappings();
             if (!$mapping->forwardExists('debug')) {
                 // echo directly, because no view here
-                print_r('Can\'t find debug forward.');
+                $this->__dump('Can\'t find debug forward.');
                 return;
             }
             $debug = $mapping->findForward('debug');
@@ -113,6 +113,10 @@ class debug_store
             }
         }
         return $string;
+    }
+
+    private function __dump($p) {
+      print_r($p);
     }
 
     public function dump($p, $type='debug')
