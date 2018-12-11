@@ -7,6 +7,7 @@ class Debug_storeTest extends PHPUnit_Framework_TestCase
 
     function setup()
     {
+        \PMVC\plug('debug', ['output'=> $this->_plug]);
         $c = \PMVC\plug('controller',[
             _VIEW_ENGINE=>'json'
         ]);
@@ -21,6 +22,7 @@ class Debug_storeTest extends PHPUnit_Framework_TestCase
         \PMVC\unplug($this->_plug);
         \PMVC\unplug('view');
         \PMVC\unplug('controller');
+        \PMVC\unplug('debug');
     }
 
     function testPlugin()
