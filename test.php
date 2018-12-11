@@ -13,7 +13,6 @@ class Debug_storeTest extends PHPUnit_Framework_TestCase
         $b = new \PMVC\MappingBuilder(); 
         $b->addForward('debug', [_TYPE=>'view']);
         $c->addMapping($b);
-        \PMVC\option('set', _TEMPLATE_DIR, './');
         $view = \PMVC\plug('view',[_CLASS=>__NAMESPACE__.'\FakeView']);
     }
 
