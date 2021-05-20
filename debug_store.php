@@ -91,6 +91,11 @@ class debug_store extends p\PlugIn implements DebugDumpInterface
         }
     }
 
+    public function toArray()
+    {
+        return \PMVC\get($this->_store);
+    }
+
     public function escape($string)
     {
         return \PMVC\plug('utf8')->toUtf8($string);
