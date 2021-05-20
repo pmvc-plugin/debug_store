@@ -98,7 +98,9 @@ class debug_store extends p\PlugIn implements DebugDumpInterface
 
     private function __dump($p)
     {
-        print_r($p);
+        if (!empty($p)) {
+            print_r($p);
+        }
         if ($this->_store) {
             $this->_store = new HashMap();
         }
