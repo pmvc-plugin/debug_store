@@ -1,11 +1,14 @@
 <?php
-PMVC\Load::plug();
-PMVC\addPlugInFolders(['../']);
-class Debug_storeTest extends PHPUnit_Framework_TestCase
+
+namespace PMVC\PlugIn\debug;
+
+use PMVC\TestCase;
+
+class DebugStoreTest extends TestCase
 {
     private $_plug = 'debug_store';
 
-    function setup()
+    function pmvc_setup()
     {
         \PMVC\plug('debug', ['output'=> $this->_plug]);
         $c = \PMVC\plug('controller',[
@@ -17,7 +20,7 @@ class Debug_storeTest extends PHPUnit_Framework_TestCase
         $view = \PMVC\plug('view',[_CLASS=>__NAMESPACE__.'\FakeView']);
     }
 
-    function teardown()
+    function pmvc_teardown()
     {
         \PMVC\unplug($this->_plug);
         \PMVC\unplug('view');
@@ -28,10 +31,10 @@ class Debug_storeTest extends PHPUnit_Framework_TestCase
     function testPlugin()
     {
         ob_start();
-        print_r(PMVC\plug($this->_plug));
+        print_r(\PMVC\plug($this->_plug));
         $output = ob_get_contents();
         ob_end_clean();
-        $this->assertContains($this->_plug,$output);
+        $this->haveString($this->_plug,$output);
     }
 
     function testDumpAtFinish()
@@ -68,7 +71,7 @@ class Debug_storeTest extends PHPUnit_Framework_TestCase
         $debugStore->onFinish();
         $output = ob_get_contents();
         ob_end_clean();
-        $this->assertContains('Can\'t find debug forward.',$output);
+        $this->haveString('Can\'t find debug forward.',$output);
     }
 
     function testAppendDebugToView()
