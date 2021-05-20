@@ -6,6 +6,7 @@
 namespace PMVC\PlugIn\debug;
 
 use PMVC\Event;
+use PMVC\HashMap;
 use PMVC as p;
 use UnderflowException;
 
@@ -23,6 +24,7 @@ class debug_store
     implements DebugDumpInterface
 {
     private $_view;
+    private $_store;
 
     public function init()
     {
@@ -45,6 +47,9 @@ class debug_store
         if (!isset($this['level'])) {
             $this['level'] = 'trace';
         }
+        if (false !== $this['keep']) {
+            $this->_store = new HashMap();
+        }
     }
 
     public function onSetConfig__forward_()
@@ -64,7 +69,7 @@ class debug_store
 
     private function _getView()
     {
-        if (!$this->_view) {
+        if (!$this->_view && \PMVC\exists('view', 'plugin')) {
             $this->_view = p\plug('view');
         }
         return $this->_view;
@@ -75,18 +80,18 @@ class debug_store
         $view = $this->_getView();
         if (!empty($view)) {
             $view->append(['debugs'=>[$a]]);
-        } else {
-            $this->__dump($a);
+        }
+        if ($this->_store) {
+            $this->_store[[]] = ['debugs'=>[$a]];
         }
     }
 
     public function onFinish()
     {
         $view = $this->_getView();
-        if (empty(\PMVC\plug('view'))) {
+        if (empty($view)) {
             // echo directly, because no view here
-            $this->__dump($view->get('debugs'));
-            return;
+            return $this->__dump(\PMVC\get($this->_store));
         }
         if (!empty($view->get('debugs'))) {
             $c = p\plug('controller');
@@ -107,12 +112,7 @@ class debug_store
     }
 
     public function escape($string) { 
-        if (!empty($string) && is_string($string)) {
-            if (!mb_detect_encoding($string,'utf-8',true)) {
-                $string = utf8_encode($string);
-            }
-        }
-        return $string;
+        return \PMVC\plug('utf8')->toUtf8($string);
     }
 
     private function __dump($p) {
