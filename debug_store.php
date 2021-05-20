@@ -10,40 +10,27 @@ use PMVC\HashMap;
 use PMVC as p;
 use UnderflowException;
 
-${_INIT_CONFIG}[_CLASS] = __NAMESPACE__.'\debug_store';
+${_INIT_CONFIG}[_CLASS] = __NAMESPACE__ . '\debug_store';
 p\initPlugin([
-    'debug'=>null,
-    'controller'=>null
+    'debug' => null,
+    'controller' => null,
 ]);
 
 /**
- * @parameters numeric level Debug dump level 
+ * @parameters numeric level Debug dump level
  */
-class debug_store
-    extends p\PlugIn
-    implements DebugDumpInterface
+class debug_store extends p\PlugIn implements DebugDumpInterface
 {
     private $_view;
     private $_store;
 
     public function init()
     {
-        p\callPlugin(
-            'dispatcher',
-            'attach',
-            [
-                $this,
-                Event\SET_CONFIG.'_'._FORWARD,
-            ]
-        );
-        p\callPlugin(
-            'dispatcher',
-            'attach',
-            [
-                $this,
-                Event\FINISH,
-            ]
-        );
+        p\callPlugin('dispatcher', 'attach', [
+            $this,
+            Event\SET_CONFIG . '_' . _FORWARD,
+        ]);
+        p\callPlugin('dispatcher', 'attach', [$this, Event\FINISH]);
         if (!isset($this['level'])) {
             $this['level'] = 'trace';
         }
@@ -56,14 +43,11 @@ class debug_store
     {
         $c = p\plug('controller');
         $view = $this->_getView();
-        if (!empty($view->get('debugs'))
-            && 'redirect' === $c[_FORWARD]->getType()
-            ) {
-            p\callPlugin(
-                'dispatcher',
-                'stop',
-                [true]
-            );
+        if (
+            !empty($view->get('debugs')) &&
+            'redirect' === $c[_FORWARD]->getType()
+        ) {
+            p\callPlugin('dispatcher', 'stop', [true]);
         }
     }
 
@@ -79,10 +63,10 @@ class debug_store
     {
         $view = $this->_getView();
         if (!empty($view)) {
-            $view->append(['debugs'=>[$a]]);
+            $view->append(['debugs' => [$a]]);
         }
         if ($this->_store) {
-            $this->_store[[]] = ['debugs'=>[$a]];
+            $this->_store[[]] = ['debugs' => [$a]];
         }
     }
 
@@ -102,29 +86,27 @@ class debug_store
                 return;
             }
             $debug = $mapping->findForward('debug');
-            p\callPlugin(
-                'dispatcher',
-                'stop',
-                [false]
-            );
+            p\callPlugin('dispatcher', 'stop', [false]);
             $c->processForward($debug);
         }
     }
 
-    public function escape($string) { 
+    public function escape($string)
+    {
         return \PMVC\plug('utf8')->toUtf8($string);
     }
 
-    private function __dump($p) {
-      print_r($p);
+    private function __dump($p)
+    {
+        print_r($p);
+        if ($this->_store) {
+            $this->_store = new HashMap();
+        }
     }
 
-    public function dump($p, $type='debug')
+    public function dump($p, $type = 'debug')
     {
-        if (p\plug('debug')->isShow(
-            $type,
-            $this['level']
-        )) {
+        if (p\plug('debug')->isShow($type, $this['level'])) {
             $this->_appendToView([$type, $p]);
         }
     }
