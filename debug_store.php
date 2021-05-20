@@ -70,6 +70,13 @@ class debug_store extends p\PlugIn implements DebugDumpInterface
         }
     }
 
+    private function _reset()
+    {
+        if ($this->_store) {
+            $this->_store = new HashMap();
+        }
+    } 
+
     public function onFinish()
     {
         $view = $this->_getView();
@@ -89,11 +96,17 @@ class debug_store extends p\PlugIn implements DebugDumpInterface
             p\callPlugin('dispatcher', 'stop', [false]);
             $c->processForward($debug);
         }
+        $this->_reset();
     }
 
     public function toArray()
     {
-        return \PMVC\get($this->_store);
+        $data = null;
+        if ($this->_store) {
+            $data = \PMVC\get($this->_store);
+            $this->_reset();
+        }
+        return $data;
     }
 
     public function escape($string)
@@ -106,9 +119,7 @@ class debug_store extends p\PlugIn implements DebugDumpInterface
         if (!empty($p)) {
             print_r($p);
         }
-        if ($this->_store) {
-            $this->_store = new HashMap();
-        }
+        $this->_reset();
     }
 
     public function dump($p, $type = 'debug')
