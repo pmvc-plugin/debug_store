@@ -23,6 +23,7 @@ class debug_store extends p\PlugIn implements DebugDumpInterface
 {
     private $_view;
     private $_store;
+    private $_queue;
 
     public function init()
     {
@@ -37,6 +38,7 @@ class debug_store extends p\PlugIn implements DebugDumpInterface
         if (false !== $this['keep']) {
             $this->_store = new HashMap();
         }
+        $this->_queue = new HashMap();
     }
 
     public function onSetConfig__forward_()
@@ -62,19 +64,23 @@ class debug_store extends p\PlugIn implements DebugDumpInterface
     private function _appendToView(array $a)
     {
         $view = $this->_getView();
+        $data =  ['debugs' => [$a]];
         if (!empty($view)) {
-            $view->append(['debugs' => [$a]]);
-        }
+            $view->append($data);
+        } else {
+            $this->_queue[[]] = $data;
+        } 
         if ($this->_store) {
-            $this->_store[[]] = ['debugs' => [$a]];
+            $this->_store[[]] = $data;
         }
     }
 
     private function _reset()
     {
         if ($this->_store) {
-            $this->_store = new HashMap();
+            unset($this->_store[null]);
         }
+        unset($this->_queue[null]);
     } 
 
     public function onFinish()
@@ -82,7 +88,10 @@ class debug_store extends p\PlugIn implements DebugDumpInterface
         $view = $this->_getView();
         if (empty($view)) {
             // echo directly, because no view here
-            return $this->__dump(\PMVC\get($this->_store));
+            return $this->__dump(\PMVC\get($this->_queue));
+        }
+        if (count($this->_queue)) {
+            $view->append(\PMVC\get($this->_queue));
         }
         if (!empty($view->get('debugs'))) {
             $c = p\plug('controller');
