@@ -86,6 +86,9 @@ class debug_store extends p\PlugIn implements DebugDumpInterface
     public function onFinish()
     {
         $view = $this->_getView();
+        if (empty($view) && \PMVC\exists('view', 'plug')) {
+            $view = \PMVC\plug('view');
+        }
         if (empty($view)) {
             // echo directly, because no view here
             return $this->__dump(\PMVC\get($this->_queue));
@@ -99,11 +102,13 @@ class debug_store extends p\PlugIn implements DebugDumpInterface
             if (!$mapping->forwardExists('debug')) {
                 // echo directly, because no view here
                 $this->__dump('Can\'t find debug forward.');
+                $this->__dump(\PMVC\get($this->_queue));
                 return;
+            } else {
+                $debug = $mapping->findForward('debug');
+                p\callPlugin('dispatcher', 'stop', [false]);
+                $c->processForward($debug);
             }
-            $debug = $mapping->findForward('debug');
-            p\callPlugin('dispatcher', 'stop', [false]);
-            $c->processForward($debug);
         }
         $this->_reset();
     }
