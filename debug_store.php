@@ -123,7 +123,7 @@ class debug_store extends p\PlugIn implements DebugDumpInterface
         return $data;
     }
 
-    public function escape($string)
+    public function escape($string, $type = null)
     {
         return \PMVC\plug('utf8')->toUtf8($string);
     }
